@@ -1,4 +1,5 @@
 using Application.Commands.User.CreateUser;
+using Application.Commands.User.DeleteUser;
 using Application.Commands.User.UpdateUser;
 using Application.Query.User;
 using Carter;
@@ -15,12 +16,10 @@ public  class UserEndpoint : ICarterModule
     group.MapPost("", CreateUser).WithName(nameof(CreateUser));
     group.MapPut("{id}", UpdateUser).WithName(nameof(UpdateUser));
     group.MapGet("{id}", GetUser).WithName(nameof(GetUser));
-    // group.MapDelete("{id}", DeleteUser).WithName(nameof(DeleteUser));
+    group.MapDelete("{id}", DeleteUser).WithName(nameof(DeleteUser));
   }
   
-  public record CreateUserRequest(Guid UserId, string FullName, string Email);
-  
-  private static async Task<IResult> CreateUser(CreateUserRequest request, ISender sender)
+  private static async Task<IResult> CreateUser(UserRequests.CreateUserRequest request, ISender sender)
   {
     var command = new CreateUserCommand(request.UserId, request.FullName, request.Email);
     await sender.Send(command);
@@ -28,8 +27,7 @@ public  class UserEndpoint : ICarterModule
     return TypedResults.Ok();
   }
   
-  public record UpdateUserRequest(string FullName, string Email);
-  private static async Task<IResult> UpdateUser(Guid id, UpdateUserRequest request, ISender sender)
+  private static async Task<IResult> UpdateUser(Guid id, UserRequests.UpdateUserRequest request, ISender sender)
   {
     var command = new UpdateUserCommand(id, request.FullName, request.Email);
     await sender.Send(command);
@@ -39,7 +37,7 @@ public  class UserEndpoint : ICarterModule
   
   private static async Task<IResult> GetUser(Guid id, ISender sender)
   {
-    var query = new GetUserQuery(id); // Assuming GetUserQuery exists and is implemented to fetch user details
+    var query = new GetUserQuery(id);
     var user = await sender.Send(query);
 
     if (user == null)
@@ -50,19 +48,11 @@ public  class UserEndpoint : ICarterModule
     return TypedResults.Ok(user);
   }
   
-  // private static async Task<IResult> DeleteUser(Guid userId, ISender sender)
-  // {
-  //   // var command = new DeleteUserEvent(userId);
-  //   // await sender.Send(command);
-  //   //
-  //   // return Results.Ok();
-  // }
-  
-  // private static async Task<IResult> GetUser(Guid userId, ISender sender)
-  // {
-  //   var command = new DeleteUserEvent(userId);
-  //   await sender.Send(command);
-  //
-  //   return Results.Ok();
-  // }
+  private static async Task<IResult> DeleteUser(Guid userId, ISender sender)
+  {
+    var command = new DeleteUserCommand(userId);
+    await sender.Send(command);
+    
+    return Results.Ok();
+  }
 }

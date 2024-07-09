@@ -7,4 +7,6 @@ public interface IEventStoreRepository<T>
   public  Task AppendEventsAsync(IEvent @event);
 
   public Task<T?> LoadProjectionAsync(Guid streamId);
+  
+  public Task<T?> LoadInlineProjectionAsync(Guid streamId);
 }

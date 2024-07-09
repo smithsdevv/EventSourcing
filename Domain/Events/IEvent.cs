@@ -1,6 +1,6 @@
 namespace Domain.Events;
 
-public interface  IEvent
+public interface IEvent
 {
-  public  Guid StreamId { get; }
+ public Guid Id {get; init;}
 }

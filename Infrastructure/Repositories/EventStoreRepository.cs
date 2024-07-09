@@ -1,4 +1,3 @@
-using Domain.Entities;
 using Domain.Events;
 using Domain.Repositories;
 using Marten;
@@ -18,12 +17,17 @@ public class EventStoreRepository<T> : IEventStoreRepository<T> where T : class
   
   public async Task AppendEventsAsync(IEvent @event)
   {
-    _session.Events.Append(@event.StreamId, @event);
+    _session.Events.Append(@event.Id, @event);
     await _session.SaveChangesAsync();
   }
 
   public Task<T?> LoadProjectionAsync(Guid streamId)
   {
     return this._querySession.Events.AggregateStreamAsync<T>(streamId);
+  }
+  
+  public Task<T?> LoadInlineProjectionAsync(Guid streamId)
+  {
+    return this._querySession.LoadAsync<T?>(streamId);
   }
 }

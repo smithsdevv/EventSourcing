@@ -14,6 +14,6 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, Domain.Entities
 
   public async Task<Domain.Entities.User> Handle(GetUserQuery request, CancellationToken cancellationToken)
   {
-    return await this._repository.LoadProjectionAsync(request.UserId);
+    return await this._repository.LoadInlineProjectionAsync(request.UserId);
   }
 }

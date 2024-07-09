@@ -15,11 +15,6 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
 
   public async Task Handle(UpdateUserCommand request, CancellationToken cancellationToken)
   {
-    await this._repository.AppendEventsAsync(new UserEvents.UserUpdatedEvent()
-    {
-      UserId = request.UserId,
-      FullName = request.FullName,
-      Email = request.Email
-    });
+    await this._repository.AppendEventsAsync(new UserEvents.UserUpdatedEvent(request.UserId, request.FullName, request.Email));
   }
 }

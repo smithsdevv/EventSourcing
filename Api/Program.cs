@@ -1,7 +1,9 @@
 using Application;
 using Carter;
+using Domain.Entities;
 using Infrastructure.ServiceCollections;
 using Marten;
+using Marten.Events.Projections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMarten(options =>
 {
   options.Connection(builder.Configuration.GetConnectionString("MartenDb"));
+  options.Projections.Add<UserProjection>(ProjectionLifecycle.Inline);
 });
 
 builder.Services.AddInfrastructure();

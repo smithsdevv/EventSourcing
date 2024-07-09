@@ -15,11 +15,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
 
   public async Task Handle(CreateUserCommand request, CancellationToken cancellationToken)
   {
-    await this._repository.AppendEventsAsync(new UserEvents.UserCreatedEvent()
-    {
-      UserId = request.UserId,
-      FullName = request.FullName,
-      Email = request.Email
-    });
+    await this._repository.AppendEventsAsync(new UserEvents.UserCreatedEvent(request.UserId, request.FullName, request.Email));
   }
 }
